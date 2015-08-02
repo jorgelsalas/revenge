@@ -10,4 +10,23 @@
     <string name="login_title">Cherry Project Mobile Client</string>
     <string name="login_password_hint">Password</string>
     <string name="login_button_text">Log in</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="test_set_up_fragment_id">Test Set up Fragment ID</string>
+    <string name="completed_tests_fragment_id">Completed Tests Fragment ID</string>
+    <string name="test_results_fragment_id">Test Results Fragment ID</string>
+    <string name="placeholder_fragment_id">Placeholder Fragment ID</string>
+    <string name="test_set_up_fragment_title">Test set up</string>
+    <string name="test_results_fragment_title">Test Results</string>
+    <string name="completed_tests_fragment_title">Completed tests</string>
 </resources>

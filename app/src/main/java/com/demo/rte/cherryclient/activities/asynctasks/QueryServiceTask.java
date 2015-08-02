@@ -25,7 +25,6 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
     private HttpClient httpHelper;
     private boolean isNull = false;
     private boolean isEmpty = false;
-    private boolean hasGeocodeError = false;
     private OnPackageRetrievalCompletedListener mCallback;
     private static final String LOG_TAG = QueryServiceTask.class.getSimpleName();
 
@@ -77,9 +76,6 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
         }
         else if(isEmpty){
             mCallback.onEmptyDataSetReceived();
-        }
-        else if(hasGeocodeError){
-            mCallback.onDataReceivedWithGeocodeError();
         }
         else{
             mCallback.onDataReceived(packages);

@@ -1,19 +1,26 @@
 package com.demo.rte.cherryclient.activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.demo.rte.cherryclient.R;
 
 
 public class LoginActivity extends ActionBarActivity {
 
+    private Button loginButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        loginButton = (Button) findViewById(R.id.login_button);
+        setClickListeners();
     }
 
     @Override
@@ -37,4 +44,19 @@ public class LoginActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void setClickListeners(){
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMainActivity();
+            }
+        });
+    }
+
+    private void goToMainActivity(){
+        Intent main = new Intent(this, MainActivity.class);
+        startActivity(main);
+    }
+
 }
