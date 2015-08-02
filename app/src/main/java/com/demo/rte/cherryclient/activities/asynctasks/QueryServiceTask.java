@@ -1,0 +1,98 @@
+package com.demo.rte.cherryclient.activities.asynctasks;
+
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.demo.rte.cherryclient.activities.constants.HttpConstants;
+import com.demo.rte.cherryclient.activities.entities.Package;
+import com.demo.rte.cherryclient.activities.http.HttpClient;
+import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+/**
+ * Created by Jorge on 02/08/2015. Background thread helper
+ */
+
+public class QueryServiceTask extends AsyncTask<String, Integer, String> {
+
+    private ArrayList<Package> packages = new ArrayList<>();
+    private JSONObject jo = null;
+    private HttpClient httpHelper;
+    private boolean isNull = false;
+    private boolean isEmpty = false;
+    private boolean hasGeocodeError = false;
+    private OnPackageRetrievalCompletedListener mCallback;
+    private static final String LOG_TAG = QueryServiceTask.class.getSimpleName();
+
+    public QueryServiceTask(Activity activity)  {
+        httpHelper = new HttpClient();
+        setCallback(activity);
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+        String result = "";
+
+        try {
+            jo = httpHelper.getEndpointJSON(HttpConstants.PACKAGE_PATH);
+            if (jo == null) {
+                isNull = true;
+            }
+            else {
+
+                JSONArray responsePackages = jo.toJSONArray(null);
+
+                for (int i = 0; i < responsePackages.length(); i++) {
+
+                    Package pack = new Package("","");
+
+                    JSONObject joVenue = (JSONObject) responsePackages.get(i);
+                    pack.setName(joVenue.getString(HttpConstants.NAME_TAG));
+                    pack.setAcronym(joVenue.getString(HttpConstants.ACRONYM_TAG));
+                    //pack.setResult_number(i + 1);
+                    packages.add(pack);
+                }
+                if (packages.size() == 0){
+                    isEmpty = true;
+                }
+            }
+
+        }
+        catch (Exception e){
+            Log.e(LOG_TAG, "Error while retrieving Foursquare data: " + e.toString(), e);
+
+        }
+        return result;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        if (isNull){
+            mCallback.onDataReceivedFailure();
+        }
+        else if(isEmpty){
+            mCallback.onEmptyDataSetReceived();
+        }
+        else if(hasGeocodeError){
+            mCallback.onDataReceivedWithGeocodeError();
+        }
+        else{
+            mCallback.onDataReceived(packages);
+        }
+    }
+
+    public void setCallback(Activity activity){
+        try {
+            mCallback = (OnPackageRetrievalCompletedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement "
+                    + OnPackageRetrievalCompletedListener.class.getName());
+        }
+    }
+
+}
