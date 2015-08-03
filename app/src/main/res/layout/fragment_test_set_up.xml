@@ -1,11 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.demo.rte.cherryclient.activities.fragments.TestSetUpFragment">
+    tools:context="com.demo.rte.cherryclient.activities.fragments.TestSetUpFragment"
+    android:orientation="vertical"
+    >
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+
+
+    <TextView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="test set up"
         android:id="@+id/b" />
 
-</FrameLayout>
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/package_spinner"
+        />
+
+</LinearLayout>

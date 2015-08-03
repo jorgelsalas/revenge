@@ -19,13 +19,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.demo.rte.cherryclient.R;
+import com.demo.rte.cherryclient.activities.entities.*;
+import com.demo.rte.cherryclient.activities.entities.Package;
 import com.demo.rte.cherryclient.activities.fragments.CompletedTestsFragment;
 import com.demo.rte.cherryclient.activities.fragments.TestResultsFragment;
 import com.demo.rte.cherryclient.activities.fragments.TestSetUpFragment;
+import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, CompletedTestsFragment.OnFragmentInteractionListener, TestResultsFragment.OnFragmentInteractionListener2,
-        TestSetUpFragment.OnFragmentInteractionListener3 {
+        TestSetUpFragment.OnFragmentInteractionListener3, OnPackageRetrievalCompletedListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -144,6 +149,26 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onFragmentInteraction3() {
+
+    }
+
+    @Override
+    public void onDataReceivedFailure() {
+
+    }
+
+    @Override
+    public void onEmptyDataSetReceived() {
+
+    }
+
+    @Override
+    public void onDataReceivedWithGeocodeError() {
+
+    }
+
+    @Override
+    public void onDataReceived(ArrayList<Package> packages) {
 
     }
 

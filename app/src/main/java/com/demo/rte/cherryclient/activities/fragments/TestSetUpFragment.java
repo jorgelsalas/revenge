@@ -7,9 +7,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.AdapterView.OnItemSelectedListener;
 import com.demo.rte.cherryclient.R;
 import com.demo.rte.cherryclient.activities.MainActivity;
+import com.demo.rte.cherryclient.activities.asynctasks.QueryServiceTask;
+import com.demo.rte.cherryclient.activities.entities.*;
+import com.demo.rte.cherryclient.activities.entities.Package;
+import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,11 +29,12 @@ import com.demo.rte.cherryclient.activities.MainActivity;
  * Use the {@link TestSetUpFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TestSetUpFragment extends Fragment {
+public class TestSetUpFragment extends Fragment implements OnPackageRetrievalCompletedListener, OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private Spinner spinner;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -66,7 +77,11 @@ public class TestSetUpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test_set_up, container, false);
+        View v = inflater.inflate(R.layout.fragment_test_set_up, container, false);
+        spinner = (Spinner) v.findViewById(R.id.package_spinner);
+        spinner.setOnItemSelectedListener(this);
+        new QueryServiceTask(this).execute("");
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -92,6 +107,47 @@ public class TestSetUpFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDataReceivedFailure() {
+
+    }
+
+    @Override
+    public void onEmptyDataSetReceived() {
+
+    }
+
+    @Override
+    public void onDataReceivedWithGeocodeError() {
+
+    }
+
+    @Override
+    public void onDataReceived(ArrayList<Package> packages) {
+        List<String> packageNames = new ArrayList<>();
+
+        for (Package p : packages){
+            packageNames.add(p.getName() + " (" + p.getAcronym() + ")");
+        }
+
+        ArrayAdapter<String> packagesAdapter = new ArrayAdapter<> (getActivity(), android.R.layout.simple_spinner_item, packageNames);
+        // Drop down layout style - list view with radio button
+        packagesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(packagesAdapter);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //For the spinner
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //for the spinner
     }
 
     /**

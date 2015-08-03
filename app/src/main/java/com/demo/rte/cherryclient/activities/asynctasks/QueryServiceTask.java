@@ -2,6 +2,7 @@ package com.demo.rte.cherryclient.activities.asynctasks;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.demo.rte.cherryclient.activities.constants.HttpConstants;
@@ -21,7 +22,9 @@ import java.util.ArrayList;
 public class QueryServiceTask extends AsyncTask<String, Integer, String> {
 
     private ArrayList<Package> packages = new ArrayList<>();
-    private JSONObject jo = null;
+    //private JSONObject ja = null;
+    private JSONArray ja = null;
+    //private JSONArray ja = null;
     private HttpClient httpHelper;
     private boolean isNull = false;
     private boolean isEmpty = false;
@@ -33,18 +36,23 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
         setCallback(activity);
     }
 
+    public QueryServiceTask(Fragment fragment)  {
+        httpHelper = new HttpClient();
+        setCallback(fragment);
+    }
+
     @Override
     protected String doInBackground(String... params) {
         String result = "";
 
         try {
-            jo = httpHelper.getEndpointJSON(HttpConstants.PACKAGE_PATH);
-            if (jo == null) {
+            ja = httpHelper.getEndpointJSON(HttpConstants.PACKAGE_PATH);
+            if (ja == null) {
                 isNull = true;
             }
             else {
 
-                JSONArray responsePackages = jo.toJSONArray(null);
+                JSONArray responsePackages = ja;
 
                 for (int i = 0; i < responsePackages.length(); i++) {
 
@@ -87,6 +95,15 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
             mCallback = (OnPackageRetrievalCompletedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement "
+                    + OnPackageRetrievalCompletedListener.class.getName());
+        }
+    }
+
+    public void setCallback(Fragment fragment){
+        try {
+            mCallback = (OnPackageRetrievalCompletedListener) fragment;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(fragment.toString() + " must implement "
                     + OnPackageRetrievalCompletedListener.class.getName());
         }
     }

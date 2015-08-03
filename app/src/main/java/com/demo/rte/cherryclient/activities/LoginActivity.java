@@ -9,6 +9,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.demo.rte.cherryclient.R;
+import com.demo.rte.cherryclient.activities.asynctasks.QueryServiceTask;
+import com.demo.rte.cherryclient.activities.entities.*;
+import com.demo.rte.cherryclient.activities.entities.Package;
+import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
+
+import java.util.ArrayList;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -21,6 +27,7 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.activity_login);
         loginButton = (Button) findViewById(R.id.login_button);
         setClickListeners();
+        new QueryServiceTask(this).execute();
     }
 
     @Override
@@ -58,5 +65,6 @@ public class LoginActivity extends ActionBarActivity {
         Intent main = new Intent(this, MainActivity.class);
         startActivity(main);
     }
+
 
 }
