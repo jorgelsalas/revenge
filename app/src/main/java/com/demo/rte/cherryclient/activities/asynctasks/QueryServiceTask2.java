@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.demo.rte.cherryclient.activities.constants.HttpConstants;
+import com.demo.rte.cherryclient.activities.entities.*;
 import com.demo.rte.cherryclient.activities.entities.Package;
 import com.demo.rte.cherryclient.activities.http.HttpClient;
 import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
@@ -16,28 +17,28 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Jorge on 02/08/2015. Background thread helper
+ * Created by Jorge on 05/08/2015. Alternative that receives the endpoint needed to fetch data and returns a JSON
+ * object or Array to the caller
  */
+public class QueryServiceTask2 extends AsyncTask<String, Integer, String> {
 
-public class QueryServiceTask extends AsyncTask<String, Integer, String> {
-
-    private ArrayList<Package> packages = new ArrayList<>();
-    //private JSONObject ja = null;
-    private JSONArray ja = null;
-    //private JSONArray ja = null;
+    private String service_name;
+    private JSONArray response = null;
     private HttpClient httpHelper;
     private boolean isNull = false;
     private boolean isEmpty = false;
     private OnPackageRetrievalCompletedListener mCallback;
-    private static final String LOG_TAG = QueryServiceTask.class.getSimpleName();
+    private static final String LOG_TAG = QueryServiceTask2.class.getSimpleName();
 
-    public QueryServiceTask(Activity activity)  {
+    public QueryServiceTask2(Activity activity, String service_name)  {
         httpHelper = new HttpClient();
+        this.service_name = service_name;
         setCallback(activity);
     }
 
-    public QueryServiceTask(Fragment fragment)  {
+    public QueryServiceTask2(Fragment fragment, String service_name)  {
         httpHelper = new HttpClient();
+        this.service_name = service_name;
         setCallback(fragment);
     }
 
@@ -46,32 +47,17 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
         String result = "";
 
         try {
-            ja = httpHelper.getEndpointJSON(HttpConstants.PACKAGE_PATH);
-            if (ja == null) {
+            response = httpHelper.getEndpointJSON(service_name);
+            if (response == null) {
                 isNull = true;
             }
-            else {
-
-                JSONArray responsePackages = ja;
-
-                for (int i = 0; i < responsePackages.length(); i++) {
-
-                    Package pack = new Package("","");
-
-                    JSONObject joVenue = (JSONObject) responsePackages.get(i);
-                    pack.setName(joVenue.getString(HttpConstants.NAME_TAG));
-                    pack.setAcronym(joVenue.getString(HttpConstants.ACRONYM_TAG));
-                    //pack.setResult_number(i + 1);
-                    packages.add(pack);
-                }
-                if (packages.size() == 0){
-                    isEmpty = true;
-                }
+            else if (response.length() == 0){
+                isEmpty = true;
             }
 
         }
         catch (Exception e){
-            Log.e(LOG_TAG, "Error while retrieving data from Bluemix server: " + e.toString(), e);
+            Log.e(LOG_TAG, "Error while retrieving data from Bluemix: " + e.toString(), e);
 
         }
         return result;
@@ -86,7 +72,7 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
             mCallback.onEmptyDataSetReceived();
         }
         else{
-            mCallback.onDataReceived(packages);
+            mCallback.onDataReceived(response);
         }
     }
 

@@ -18,6 +18,8 @@ import com.demo.rte.cherryclient.activities.entities.*;
 import com.demo.rte.cherryclient.activities.entities.Package;
 import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,7 +122,7 @@ public class TestSetUpFragment extends Fragment implements OnPackageRetrievalCom
     }
 
     @Override
-    public void onDataReceivedWithGeocodeError() {
+    public void onDataReceived(JSONArray response) {
 
     }
 

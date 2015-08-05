@@ -26,6 +26,8 @@ import com.demo.rte.cherryclient.activities.fragments.TestResultsFragment;
 import com.demo.rte.cherryclient.activities.fragments.TestSetUpFragment;
 import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity
@@ -163,7 +165,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onDataReceivedWithGeocodeError() {
+    public void onDataReceived(JSONArray response) {
 
     }
 

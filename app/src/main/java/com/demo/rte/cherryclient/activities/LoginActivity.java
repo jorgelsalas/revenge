@@ -27,7 +27,7 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.activity_login);
         loginButton = (Button) findViewById(R.id.login_button);
         setClickListeners();
-        new QueryServiceTask(this).execute();
+        //new QueryServiceTask(this).execute();
     }
 
     @Override
