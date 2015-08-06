@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 import com.demo.rte.cherryclient.R;
 import com.demo.rte.cherryclient.activities.MainActivity;
+import com.demo.rte.cherryclient.activities.asynctasks.PostServiceTask;
 import com.demo.rte.cherryclient.activities.asynctasks.QueryServiceTask;
 import com.demo.rte.cherryclient.activities.entities.*;
 import com.demo.rte.cherryclient.activities.entities.Package;
@@ -37,6 +39,9 @@ public class TestSetUpFragment extends Fragment implements OnPackageRetrievalCom
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private Spinner spinner;
+    private Button startTestButton;
+    private ArrayAdapter<String> packagesAdapter;
+    private int currentSpinnerPosition = 0;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -82,6 +87,8 @@ public class TestSetUpFragment extends Fragment implements OnPackageRetrievalCom
         View v = inflater.inflate(R.layout.fragment_test_set_up, container, false);
         spinner = (Spinner) v.findViewById(R.id.package_spinner);
         spinner.setOnItemSelectedListener(this);
+        startTestButton = (Button) v.findViewById(R.id.start_test_button);
+        setOnClickListeners();
         new QueryServiceTask(this).execute("");
         return v;
     }
@@ -91,6 +98,25 @@ public class TestSetUpFragment extends Fragment implements OnPackageRetrievalCom
         if (mListener != null) {
             mListener.onFragmentInteraction3();
         }
+    }
+
+    private void setOnClickListeners(){
+        startTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPackageTest();
+            }
+        });
+    }
+
+    private void startPackageTest(){
+        String packageAndAcron = packagesAdapter.getItem(currentSpinnerPosition);
+        String name, acronym;
+        acronym = packageAndAcron.substring(packageAndAcron.lastIndexOf("("), packageAndAcron.length()-1);
+        name = packageAndAcron.substring(0, packageAndAcron.lastIndexOf("("));
+        //TODO: Llamar al servicio web de agregar prueba de paquete
+        new PostServiceTask(this, name, acronym, "In Progress").execute("");
+        //Cambiar hardcoded
     }
 
     @Override
@@ -134,7 +160,7 @@ public class TestSetUpFragment extends Fragment implements OnPackageRetrievalCom
             packageNames.add(p.getName() + " (" + p.getAcronym() + ")");
         }
 
-        ArrayAdapter<String> packagesAdapter = new ArrayAdapter<> (getActivity(), android.R.layout.simple_spinner_item, packageNames);
+        packagesAdapter = new ArrayAdapter<> (getActivity(), android.R.layout.simple_spinner_item, packageNames);
         // Drop down layout style - list view with radio button
         packagesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -145,6 +171,7 @@ public class TestSetUpFragment extends Fragment implements OnPackageRetrievalCom
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //For the spinner
+        currentSpinnerPosition = position;
     }
 
     @Override

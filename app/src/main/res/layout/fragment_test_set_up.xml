@@ -3,14 +3,22 @@
     android:layout_height="match_parent"
     tools:context="com.demo.rte.cherryclient.activities.fragments.TestSetUpFragment"
     android:orientation="vertical"
-    >
+    android:weightSum="1">
 
     <!-- TODO: Update blank fragment layout -->
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="MWPM QA Setup"
+        android:id="@+id/textView2"
+        android:layout_weight="0.08" />
+
     <TextView android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test set up"
+        android:text="Package Selection"
         android:id="@+id/b" />
 
     <Spinner
@@ -18,5 +26,64 @@
         android:layout_height="wrap_content"
         android:id="@+id/package_spinner"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Operating System"
+        android:id="@+id/textView"
+        android:padding="15dp"
+        android:singleLine="false" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Windows 7 - 32 Bits"
+        android:id="@+id/checkBox" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Windows 7 - 64 Bits"
+        android:id="@+id/checkBox2" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Windows 8 - 64 Bits"
+        android:id="@+id/checkBox3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type of Validation"
+        android:padding="15dp"
+        android:id="@+id/textView3" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Install"
+        android:id="@+id/checkBox4" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ReInstall"
+        android:id="@+id/checkBox5" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Uninstall"
+        android:id="@+id/checkBox6" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Launch QA"
+        android:id="@+id/start_test_button"
+        android:layout_gravity="right" />
 
 </LinearLayout>

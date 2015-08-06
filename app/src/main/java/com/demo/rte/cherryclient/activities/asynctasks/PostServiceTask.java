@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.demo.rte.cherryclient.activities.constants.HttpConstants;
+import com.demo.rte.cherryclient.activities.entities.*;
 import com.demo.rte.cherryclient.activities.entities.Package;
 import com.demo.rte.cherryclient.activities.http.HttpHelper;
 import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
@@ -16,28 +17,33 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Jorge on 02/08/2015. Background thread helper
+ * To POST
  */
-
-public class QueryServiceTask extends AsyncTask<String, Integer, String> {
+public class PostServiceTask extends AsyncTask<String, Integer, String> {
 
     private ArrayList<Package> packages = new ArrayList<>();
     //private JSONObject ja = null;
     private JSONArray ja = null;
-    //private JSONArray ja = null;
     private HttpHelper httpHelper;
     private boolean isNull = false;
     private boolean isEmpty = false;
+    private String name, acronym, status;
     private OnPackageRetrievalCompletedListener mCallback;
     private static final String LOG_TAG = QueryServiceTask.class.getSimpleName();
 
-    public QueryServiceTask(Activity activity)  {
+    public PostServiceTask(Activity activity, String name, String acronym, String status)  {
         httpHelper = new HttpHelper();
+        this.name = name;
+        this.acronym = acronym;
+        this.status = status;
         setCallback(activity);
     }
 
-    public QueryServiceTask(Fragment fragment)  {
+    public PostServiceTask(Fragment fragment, String name, String acronym, String status)  {
         httpHelper = new HttpHelper();
+        this.name = name;
+        this.acronym = acronym;
+        this.status = status;
         setCallback(fragment);
     }
 
@@ -46,32 +52,10 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
         String result = "";
 
         try {
-            ja = httpHelper.getEndpointJSON(HttpConstants.PACKAGE_PATH);
-            if (ja == null) {
-                isNull = true;
-            }
-            else {
-
-                JSONArray responsePackages = ja;
-
-                for (int i = 0; i < responsePackages.length(); i++) {
-
-                    Package pack = new Package("","");
-
-                    JSONObject joVenue = (JSONObject) responsePackages.get(i);
-                    pack.setName(joVenue.getString(HttpConstants.NAME_TAG));
-                    pack.setAcronym(joVenue.getString(HttpConstants.ACRONYM_TAG));
-                    //pack.setResult_number(i + 1);
-                    packages.add(pack);
-                }
-                if (packages.size() == 0){
-                    isEmpty = true;
-                }
-            }
-
+            httpHelper.postToEndpoint(HttpConstants.PACKAGE_TESTS_PATH, name, acronym, status);
         }
         catch (Exception e){
-            Log.e(LOG_TAG, "Error while retrieving data from Bluemix server: " + e.toString(), e);
+            Log.e(LOG_TAG, "Error while POSTING data from Bluemix server: " + e.toString(), e);
 
         }
         return result;
@@ -79,15 +63,7 @@ public class QueryServiceTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        if (isNull){
-            mCallback.onDataReceivedFailure();
-        }
-        else if(isEmpty){
-            mCallback.onEmptyDataSetReceived();
-        }
-        else{
-            mCallback.onDataReceived(packages);
-        }
+
     }
 
     public void setCallback(Activity activity){
