@@ -11,5 +11,6 @@ public class HttpConstants {
     public static final String PACKAGE_TESTS_PATH = "package_tests";
     public static final String PACKAGE_TEST_RESULTS_PATH = "package_test_results";
     public static final String ACRONYM_TAG = "acronym";
+    public static final String STATUS_TAG = "status";
 
 }

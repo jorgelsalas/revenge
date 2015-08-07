@@ -7,9 +7,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.demo.rte.cherryclient.R;
 import com.demo.rte.cherryclient.activities.MainActivity;
+import com.demo.rte.cherryclient.activities.adapters.TestAdapter;
+import com.demo.rte.cherryclient.activities.asynctasks.QueryServiceTask2;
+import com.demo.rte.cherryclient.activities.constants.HttpConstants;
+import com.demo.rte.cherryclient.activities.entities.*;
+import com.demo.rte.cherryclient.activities.entities.Package;
+import com.demo.rte.cherryclient.activities.interfaces.OnPackageRetrievalCompletedListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +32,7 @@ import com.demo.rte.cherryclient.activities.MainActivity;
  * Use the {@link TestResultsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TestResultsFragment extends Fragment {
+public class TestResultsFragment extends Fragment implements OnPackageRetrievalCompletedListener  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,6 +41,9 @@ public class TestResultsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ListView testList;
+    private TestAdapter adapter;
+    private ArrayList<PackageTest> ptList = new ArrayList<>();
 
     private OnFragmentInteractionListener2 mListener;
 
@@ -66,7 +82,13 @@ public class TestResultsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test_results, container, false);
+        View v = inflater.inflate(R.layout.fragment_test_results, container, false);
+        testList = (ListView) v.findViewById(R.id.test_listview);
+        adapter = new TestAdapter(ptList, getActivity());
+        testList.setAdapter(adapter);
+        new QueryServiceTask2(this, HttpConstants.PACKAGE_TESTS_PATH).execute("");
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -92,6 +114,44 @@ public class TestResultsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDataReceivedFailure() {
+
+    }
+
+    @Override
+    public void onEmptyDataSetReceived() {
+
+    }
+
+    @Override
+    public void onDataReceived(JSONArray response) {
+        try{
+            ptList = new ArrayList<>();
+            //Implement this one
+            for (int i = 0; i < response.length(); i++) {
+
+                PackageTest pt = new PackageTest("","","");
+                JSONObject joPackTest = null;
+                joPackTest = (JSONObject) response.get(i);
+                pt.setName(joPackTest.getString(HttpConstants.NAME_TAG));
+                pt.setAcronym(joPackTest.getString(HttpConstants.ACRONYM_TAG));
+                pt.setStatus(joPackTest.getString(HttpConstants.STATUS_TAG));
+                ptList.add(pt);
+            }
+            adapter.setNewData(ptList);
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onDataReceived(ArrayList<Package> packages) {
+
     }
 
     /**
